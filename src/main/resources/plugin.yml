@@ -1,0 +1,17 @@
+name: DamageNumbers
+version: '1.0-SNAPSHOT'
+main: carnage.damageNumbers.DamageNumbers
+api-version: '1.21'
+depend: [packetevents]
+author: FinalCarnage942
+commands:
+  damagenumbers :
+    description: DamageNumbers commands
+    usage: /<command> test <hit|crit|heal>
+    aliases: [dg]
+    permission: damagenumbers.test
+
+permissions:
+  damagenumbers.test:
+    description: Allows testing damage holograms
+    default: op
