@@ -246,7 +246,6 @@ public class DamageNumberHandler {
         List<EntityData<?>> metadata = new ArrayList<>();
         metadata.add(new EntityData<>(0, EntityDataTypes.BYTE, (byte) 0x20));
         metadata.add(new EntityData<>(23, EntityDataTypes.ADV_COMPONENT, textComponent));
-        metadata.add(new EntityData<>(25, EntityDataTypes.INT, 0x40000000));
         metadata.add(new EntityData<>(27, EntityDataTypes.BYTE, (byte) 0x03));
         WrapperPlayServerEntityMetadata metadataPacket = new WrapperPlayServerEntityMetadata(entityId, metadata);
 
@@ -299,10 +298,22 @@ public class DamageNumberHandler {
 
                 double xShake = shakeEnabled && progress < 0.4 ? (random.nextDouble() - 0.5) * 0.08 : 0;
                 double zShake = shakeEnabled && progress < 0.4 ? (random.nextDouble() - 0.5) * 0.08 : 0;
-                float yaw = spinEnabled ? (float) (currentStep * spinSpeed * 18.0) : 0.0f;
+
+                double hologramX = position.getX() + xShake;
+                double hologramZ = position.getZ() + zShake;
+                double playerX = viewer.getLocation().getX();
+                double playerZ = viewer.getLocation().getZ();
+
+                double dx = playerX - hologramX;
+                double dz = playerZ - hologramZ;
+                float yaw = (float) Math.toDegrees(Math.atan2(dz, dx)) - 90;
+
+                if (spinEnabled) {
+                    yaw += currentStep * spinSpeed * 18.0;
+                }
 
                 WrapperPlayServerEntityTeleport teleportPacket = new WrapperPlayServerEntityTeleport(
-                        entityId, new Vector3d(position.getX() + xShake, yOffset, position.getZ() + zShake), yaw, 0.0f, false
+                        entityId, new Vector3d(hologramX, yOffset, hologramZ), yaw, 0.0f, false
                 );
 
                 try {
@@ -388,7 +399,6 @@ public class DamageNumberHandler {
         List<EntityData<?>> metadata = new ArrayList<>();
         metadata.add(new EntityData<>(0, EntityDataTypes.BYTE, (byte) 0x20));
         metadata.add(new EntityData<>(23, EntityDataTypes.ADV_COMPONENT, textComponent));
-        metadata.add(new EntityData<>(25, EntityDataTypes.INT, 0x40000000));
         metadata.add(new EntityData<>(27, EntityDataTypes.BYTE, (byte) 0x03));
         WrapperPlayServerEntityMetadata metadataPacket = new WrapperPlayServerEntityMetadata(entityId, metadata);
 

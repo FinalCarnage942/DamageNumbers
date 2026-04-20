@@ -1,140 +1,106 @@
 # DamageNumbers Configuration for Paper 1.21.8
-# Customize damage and healing holograms with Hypixel Skyblock-style visuals
-# Uses legacy '&' color codes (e.g., &c for red, &l for bold) for text formatting
-# All durations are in ticks (20 ticks = 1 second) unless specified as milliseconds (ms)
+# Uses legacy '&' color codes (&c=red, &l=bold, &a=green, etc) and placeholders (%s=value)
 
-# Enable debug logging for detailed information in logs/latest.log
-# Set to true to troubleshoot hologram spawning, damage detection, or healing events
+# Hologram text formats (damage, critical hits, healing)
+formats:
+  normal: "&c&l%s DMG"
+  critical: "&e&l%s &4✧"
+  healing: "&a&l+%s ❤"
+
+# Enable console logging for debugging hologram spawning and damage detection
 debug: false
 
-# Global cooldown between hologram spawns (in milliseconds) to prevent spam
-# Lower values allow more frequent holograms, e.g., for rapid regeneration
+# Cooldown (ms) between hologram spawns to prevent spam
 cooldown-ms: 10
 
-# Define which events trigger holograms
+# What events trigger holograms
 triggers:
-  # Show holograms for player attacks on mobs (e.g., zombies, cows)
+  # Player hitting mobs (zombies, cows, etc)
   player-vs-mob: true
-
-  # Show holograms for mob attacks on players (e.g., zombie hitting player)
+  # Mobs hitting players
   mob-vs-player: false
-
-  # Show holograms for player vs. player combat
+  # Player vs player combat
   player-vs-player: true
-
-  # Show holograms for healing events (e.g., regeneration, potions)
+  # Healing from potions, regeneration, etc
   healing: true
-
-  # Ignore invisible entities to prevent holograms for vanished players/mobs
+  # Don't show holograms for invisible entities
   ignore-invisible: true
-
-  # List of entity types to ignore for hologram spawning
+  # Entity types to skip
   ignored-entity-types:
     - ARMOR_STAND
     - ITEM_FRAME
     - GLOW_ITEM_FRAME
 
-# Display settings for holograms (damage and critical hits)
+# Damage hologram visibility settings
 display:
-
-  # Who can see damage/critical holograms: 'damager' (only attacker), 'all' (everyone in range)
+  # 'damager' = only attacker sees it, 'everyone' = all players in range
   visibility: damager
-
-  # Maximum distance (in blocks) for players to see damage/critical holograms
-  view-range: 32.0
-
-  # Initial spawn offset relative to entity’s location (in blocks)
+  # Max distance (blocks) for players to see damage numbers
+  view-range: 48.0
+  # Spawn position offset from entity center
   offset:
-    x: 0.0  # No X offset for centered spawning
-    y: 0.8  # Spawn 0.8 blocks above entity’s head for visibility
-    z: 0.0  # No Z offset for centered spawning
-  # Random spread around spawn point (in blocks) for natural, scattered effect
-  random-offset: 0.5  # ±0.5 blocks on X/Z axes to avoid overlap
+    x: 0.0
+    y: 0.8   # Height above entity
+    z: 0.0
+  # Random spread (blocks) to avoid overlap of multiple hits
+  random-offset: 0.4
 
-# Animation settings for hologram movement and fading
+# Hologram animation and movement
 animation:
-  # Duration of hologram visibility (in ticks, 40 = ~2 seconds)
-  fade-duration: 40
-
-  # Upward movement speed (blocks per tick, 0.06 * 40 = ~2.4 blocks total rise)
-  rise-speed: 0.06
-
-  # Enable slight bounce effect during rise for dynamic visuals
+  # How long (ticks) the hologram stays visible (50 ticks = ~2.5 sec)
+  fade-duration: 50
+  # How fast the text rises (blocks per tick)
+  rise-speed: 0.08
+  # Slight bounce effect during initial rise
   bounce: true
-
-  # Enable shake effect for critical hit holograms (subtle wobble)
+  # Shake effect on critical hits
   shake-on-crit: true
-
-  # Spin speed for hologram rotation (degrees per tick, 0.0 = no spin)
+  # Rotation speed (0.0 = no spin)
   spin-speed: 0.0
 
 # Healing-specific settings
 healing:
-  # Who can see healing holograms: 'healer' (only healed player), 'all' (everyone in range)
+  # 'healer' = only healed player sees it, 'all' = everyone in range
   visibility: all
-
-  # Maximum distance (in blocks) for players to see healing holograms
-  view-range: 16.0  # Reduced for performance, increase to 32.0 if needed
-
-  # Cooldown between healing holograms (in milliseconds)
-  cooldown-ms: 10   # Low value to allow frequent regeneration ticks
-  # Time window (in milliseconds) to stack multiple healing events into one hologram
-
-  stack-window-ms: 1000  # Stack healing within 1 second for smoother display
-  # Delay (in ticks) before showing stacked healing hologram
+  # Max distance (blocks) for players to see healing numbers
+  view-range: 24.0
+  # Cooldown between healing displays (ms)
+  cooldown-ms: 10
+  # Time window (ms) to combine multiple healing events
+  stack-window-ms: 1000
+  # Delay (ticks) before showing combined healing hologram
   stack-delay-ticks: 10
 
-# Advanced settings for fine-tuning behavior
+# Advanced tuning
 advanced:
-  # Delay before spawning damage holograms (in ticks, 0 = immediate)
+  # Delay (ticks) before showing damage hologram (0 = instant)
   delay-ticks: 0
-
-  # Delay before spawning healing holograms (in ticks)
+  # Delay before showing healing hologram
   healing-delay-ticks: 0
-
-  # Stacking settings for combining multiple damage/healing events
+  # Combine rapid hits/healing into single holograms
   stacking:
-
-    # Enable stacking for damage holograms (combine rapid hits)
+    # Combine rapid damage hits
     enabled: false
-
-    # Enable stacking for healing holograms (combine rapid regeneration ticks)
+    # Combine rapid healing ticks
     healing-enabled: true
-
-    # Time window (in milliseconds) to stack damage events
+    # Time window (ms) to stack damage
     window-ms: 300
-
-    # Delay (in ticks) before showing stacked damage hologram
+    # Delay (ticks) before showing stacked damage
     delay-ticks: 5
-
-  # Lifetime of holograms (in ticks, overrides animation.fade-duration if set)
+  # How long (ticks) holograms display (overrides fade-duration)
   lifetime:
-    normal: 40    # Normal damage hologram duration
-    critical: 40  # Critical hit hologram duration
-    healing: 40   # Healing hologram duration
-
-  # Sound effects played when holograms spawn
+    normal: 50
+    critical: 50
+    healing: 50
+  # Sound effects when holograms spawn
   sounds:
-
-    # Sound for normal damage (e.g., ENTITY_EXPERIENCE_ORB_PICKUP, empty for none)
+    # Normal damage sound (empty = none)
     normal: ""
-
-    # Sound for critical hits (subtle chime for emphasis)
+    # Critical hit sound
     critical: "ENTITY_EXPERIENCE_ORB_PICKUP"
-
-    # Sound for healing (gentle plop for immersion)
+    # Healing sound
     healing: "ENTITY_PLAYER_LEVELUP"
-
-    # Volume for all sounds (0.0 to 1.0)
-    volume: 0.5
-
-    # Pitch for all sounds (0.5 to 2.0, 1.0 = default)
+    # Volume (0.0 to 1.0)
+    volume: 0.6
+    # Pitch (0.5 to 2.0, 1.0 = default)
     pitch: 1.0
-
-# Text formats for holograms using legacy '&' color codes
-# Placeholder %s is replaced with the damage/healing amount (formatted to 1 decimal)
-# Examples: &c for red, &e&l for bold yellow, &a for green
-formats:
-  normal: "&c&l%s DMG"          # Bold red for normal damage, e.g., "1.0 DMG"
-  critical: "&e&l%s &4✧"        # Bold yellow with dark red sparkle for critical hits
-  healing: "&a&l+%s ❤"          # Bold green with heart for healing

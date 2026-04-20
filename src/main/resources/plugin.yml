@@ -5,13 +5,20 @@ api-version: '1.21'
 depend: [packetevents]
 author: FinalCarnage942
 commands:
-  damagenumbers :
+  damagenumbers:
     description: DamageNumbers commands
     usage: /<command> test <hit|crit|heal>
     aliases: [dg]
     permission: damagenumbers.test
+  dnreload:
+    description: Reload DamageNumbers configuration
+    usage: /dnreload
+    permission: damagenumbers.reload
 
 permissions:
   damagenumbers.test:
     description: Allows testing damage holograms
+    default: op
+  damagenumbers.reload:
+    description: Allows reloading damage numbers config
     default: op
